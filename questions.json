@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Which response deadlines have passed while the linked statement is still embargoed?",
+    "command": "node scripts/media.mjs deadlines"
+  },
+  {
+    "question": "Which enquiries need an answer today but have no approved wording?",
+    "command": "node scripts/media.mjs deadlines"
+  },
+  {
+    "question": "Which current statement versions are waiting for a reviewer?",
+    "command": "node scripts/media.mjs approvals-due"
+  },
+  {
+    "question": "Which approved statements are still under embargo?",
+    "command": "node scripts/media.mjs embargoes"
+  },
+  {
+    "question": "Which follow-ups are overdue, and who owns them?",
+    "command": "node scripts/media.mjs overdue"
+  },
+  {
+    "question": "Which journalists have open enquiries but no recent logged interaction?",
+    "command": "node scripts/media.mjs quiet-contacts"
+  },
+  {
+    "question": "Which contacts have no recorded source or purpose?",
+    "command": "node scripts/media.mjs compliance"
+  },
+  {
+    "question": "Which contacts need a retention review?",
+    "command": "node scripts/media.mjs compliance"
+  },
+  {
+    "question": "Which campaigns have both missed deadlines and unapproved statements?",
+    "command": "node scripts/media.mjs summary"
+  },
+  {
+    "question": "What changed between statement versions, and who approved the current one?",
+    "command": "node scripts/media.mjs release REL-001"
+  }
+]

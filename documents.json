@@ -1,11 +1,68 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "spokesperson-brief",
+    "title": "Internal spokesperson brief",
+    "for_each": "select id,code from inquiries order by code",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Request and deadline",
+        "layout": "record",
+        "sql": "select code,subject,question,owner,deadline,status from inquiries where id=$1"
+      },
+      {
+        "title": "Journalist",
+        "layout": "record",
+        "sql": "select c.name,c.organisation,c.status from contacts c join inquiries i on i.contact_id=c.id where i.id=$1"
+      },
+      {
+        "title": "Statement readiness",
+        "sql": "select r.code,r.title,r.revision,r.readiness,r.embargo_until from release_calendar r join releases x on x.code=r.code join inquiries i on i.release_id=x.id where i.id=$1",
+        "note": "Internal only. Statement text is withheld here. Use the checked draft command after approval and embargo review."
+      },
+      {
+        "title": "Actions",
+        "sql": "select f.code,f.owner,f.task,f.due_at,f.completed_at,f.outcome from followups f where f.inquiry_id=$1 order by f.due_at"
+      }
+    ]
+  },
+  {
+    "name": "release-approval",
+    "title": "Internal release approval record",
+    "for_each": "select id,code from releases order by code",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Current decision",
+        "layout": "record",
+        "sql": "select code,title,revision,author,approved_by,approved_at,approval_evidence,embargo_until from releases where id=$1",
+        "note": "Approval applies only to the current revision. This report grants no permission to publish."
+      },
+      {
+        "title": "Version history",
+        "sql": "select revision,title,author,embargo_until,created_at from release_versions where release_id=$1 order by revision"
+      }
+    ]
+  },
+  {
+    "name": "campaign-review",
+    "title": "Internal campaign review",
+    "for_each": "select id,code from campaigns order by code",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Purpose",
+        "layout": "record",
+        "sql": "select code,name,owner,objective,audience from campaigns where id=$1"
+      },
+      {
+        "title": "Requests",
+        "sql": "select code,subject,owner,deadline,status,outcome from inquiries where campaign_id=$1 order by deadline"
+      },
+      {
+        "title": "Statements",
+        "sql": "select code,title,revision,author,approved_by,embargo_until from releases where campaign_id=$1 order by code"
+      }
     ]
   }
 ]

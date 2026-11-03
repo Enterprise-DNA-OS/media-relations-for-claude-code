@@ -1,13 +1,41 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Media Relations for Claude Code: what needs attention, rendered by npm run view",
+    "title": "The media desk this week",
+    "subtitle": "Internal working report. Times are UTC. Nothing sends.",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Response deadlines",
+        "sql": "select code,subject,owner,to_char(deadline at time zone 'UTC','YYYY-MM-DD HH24:MI') as deadline_utc,attention,statement from deadline_desk order by deadline"
+      },
+      {
+        "title": "Follow-ups",
+        "sql": "select code,inquiry,owner,task,to_char(due_at at time zone 'UTC','YYYY-MM-DD HH24:MI') as due_utc,attention from followup_desk where completed_at is null order by due_at"
+      }
+    ]
+  },
+  {
+    "name": "releases",
+    "title": "Release approvals and embargoes",
+    "sections": [
+      {
+        "title": "Current versions",
+        "sql": "select code,title,revision,to_char(embargo_until at time zone 'UTC','YYYY-MM-DD HH24:MI') as embargo_utc,approved_by,readiness from release_calendar order by code",
+        "note": "Approved draft available means the statement passed the local record checks. A person still reviews its use."
+      }
+    ]
+  },
+  {
+    "name": "relationships",
+    "title": "Press relationships and record reviews",
+    "sections": [
+      {
+        "title": "Relationships",
+        "sql": "select code,name,organisation,status,open_inquiries,attention from relationship_review order by code"
+      },
+      {
+        "title": "Review findings",
+        "sql": "select * from compliance_review order by code,rule"
       }
     ]
   }
